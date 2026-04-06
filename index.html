@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Vobi: MVP Checklist de Manutenção | Michel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@300;400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --bg: #FAFAF9;
+            --surface: #FFFFFF;
+            --border: #E7E5E4;
+            --text-primary: #1C1917;
+            --text-secondary: #57534E;
+            --text-tertiary: #A8A29E;
+            --accent: #0F172A;
+            --accent-light: #334155;
+            --highlight: #FEF3C7;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            
+            --font-display: 'Fraunces', serif;
+            --font-body: 'IBM Plex Sans', sans-serif;
+            
+            --radius: 8px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Header */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.9);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--accent);
+        }
+        
+        .header-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Hero */
+        .hero {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+        
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 72px;
+            z-index: 99;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .nav-tab:hover {
+            color: var(--text-primary);
+        }
+        
+        .nav-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        
+        /* Main Content */
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Typography */
+        h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            letter-spacing: -0.01em;
+        }
+        
+        h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 1.25rem 0 0.75rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .card-icon {
+            font-size: 1.5rem;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .card-meta {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-top: 0.5rem;
+        }
+        
+        /* Journey */
+        .journey {
+            margin: 2rem 0;
+        }
+        
+        .journey-step {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .journey-before,
+        .journey-after {
+            padding: 1.5rem;
+            border-radius: var(--radius);
+        }
+        
+        .journey-before {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            border: 1px solid #FCA5A5;
+        }
+        
+        .journey-after {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border: 1px solid #6EE7B7;
+        }
+        
+        .journey-label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            opacity: 0.8;
+        }
+        
+        .journey-metric {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+        
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+        
+        .feature-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-number {
+            width: 2rem;
+            height: 2rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        
+        .feature-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .feature-why {
+            background: var(--highlight);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .feature-why strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Backlog */
+        .backlog-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .backlog-item.priority-high {
+            border-left-color: var(--success);
+        }
+        
+        .backlog-item.priority-medium {
+            border-left-color: var(--warning);
+        }
+        
+        .backlog-item.priority-low {
+            border-left-color: var(--text-tertiary);
+        }
+        
+        .backlog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .backlog-tags {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .tag.implemented {
+            background: #D1FAE5;
+            color: #047857;
+        }
+        
+        .tag.v2 {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        
+        .tag.v3 {
+            background: #E5E7EB;
+            color: #4B5563;
+        }
+        
+        /* Quote */
+        .quote {
+            border-left: 3px solid var(--accent);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        
+        /* Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.875rem;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .comparison-table th {
+            font-weight: 600;
+            background: var(--surface);
+        }
+        
+        .comparison-table tr:hover {
+            background: var(--bg);
+        }
+        
+        /* CTA */
+        .cta {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .cta h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: white;
+            color: var(--accent);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .journey-step {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-content {
+                padding: 0 1rem;
+            }
+            
+            main {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Case Vobi</div>
+            <div class="header-meta">Michel · Product Designer</div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1 class="hero-title">MVP Checklist de Manutenção</h1>
+        <p class="hero-subtitle">Transformando processo manual baseado em papel em solução digital mobile-first que elimina retrabalho de transcrição para a gestão.</p>
+        <div class="hero-meta">
+            <span>📅 Abril 2026</span>
+            <span>⏱️ 25 min leitura</span>
+            <span>🎯 Product Design</span>
+        </div>
+    </div>
+
+    <nav class="nav-tabs">
+        <div class="nav-content">
+            <button class="nav-tab active" onclick="showSection('contexto')">Contexto</button>
+            <button class="nav-tab" onclick="showSection('personas')">Personas</button>
+            <button class="nav-tab" onclick="showSection('features')">Features</button>
+            <button class="nav-tab" onclick="showSection('backlog')">Backlog</button>
+            <button class="nav-tab" onclick="showSection('metricas')">Métricas</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- CONTEXTO -->
+        <section id="contexto" class="section active">
+            <h2>1. Contexto e Problema</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🎯</span>
+                    <div>
+                        <div class="card-title">O Desafio</div>
+                        <div class="card-meta">Vobi quer validar expansão para serviços de manutenção</div>
+                    </div>
+                </div>
+                <p><strong>Caso de uso piloto:</strong> Revisão de ar-condicionado</p>
+                <p><strong>Tempo disponível:</strong> 2-3 horas</p>
+            </div>
+
+            <h3>Problema Atual</h3>
+            <p>Pequenas empresas de manutenção (4-10 técnicos) usam <strong>papel carbonado</strong>:</p>
+            
+            <div class="journey">
+                <div class="journey-step">
+                    <div class="journey-before">
+                        <div class="journey-label">❌ Processo Manual</div>
+                        <p>Gestora preenche papel → Técnico leva → Preenche à mão (ilegível) → Fotografa → Gestora digita no sistema</p>
+                        <div class="journey-metric">2-3h/dia desperdiçadas</div>
+                    </div>
+                    <div class="journey-after">
+                        <div class="journey-label">✅ Solução Digital</div>
+                        <p>Gestora cria OS digital → Técnico preenche no app → Dados salvos automaticamente → Cliente recebe relatório</p>
+                        <div class="journey-metric">Retrabalho de transcrição eliminado</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Dores Principais</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">2-3h</div>
+                    <div class="stat-label">Gestora digitando por dia</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5-7min</div>
+                    <div class="stat-label">Técnico preenchendo papel</div>
+                </div>
+
+            </div>
+
+            <div class="quote">
+                <strong>Hipótese Central:</strong> "Se criarmos checklist digital mobile-first, técnicos adotarão e não voltarão pro papel, eliminando retrabalho da gestora."
+            </div>
+
+            <h3>Decisão Estratégica</h3>
+            <p><strong>Técnico é o gargalo.</strong> Se ele não usar, volta tudo pro papel.</p>
+            <p>✅ <strong>70% do esforço</strong> investido no mobile do técnico<br>
+            ✅ <strong>15%</strong> para gestora<br>
+            ✅ <strong>15%</strong> para cliente</p>
+        </section>
+
+        <!-- PERSONAS -->
+        <section id="personas" class="section">
+            <h2>2. Perfis e Jornadas</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">👨‍🔧</span>
+                    <div>
+                        <div class="card-title">Mão de Obra ⭐ Primária</div>
+                        <div class="card-meta">Técnico de campo · 5-7 atendimentos/dia · 100% mobile</div>
+                    </div>
+                </div>
+
+                <p><strong>Job-to-be-Done:</strong></p>
+                <div class="quote">
+                    "Quando finalizo um atendimento, preciso documentar o que foi feito de forma rápida e completa, para não esquecer detalhes e seguir pro próximo cliente sem atraso."
+                </div>
+
+                <p><strong>Contexto de uso:</strong> Em pé, mãos sujas, com pressa, <3 minutos disponíveis</p>
+
+                <h4>Jornada Comparada</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Etapa</th>
+                            <th>Antes (Papel)</th>
+                            <th>Depois (Digital)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ver OS</td>
+                            <td>Papel amassa</td>
+                            <td>📱 App no bolso</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Preencher</strong></td>
+                            <td><strong>5-7min 😤</strong></td>
+                            <td><strong>&lt;3min 😊</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Fotografar</td>
+                            <td>Mãos sujas</td>
+                            <td>❌ Não precisa</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="quote">
+                    "Antes eu odiava preencher OS. Agora é até rápido."
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">👩‍💼</span>
+                    <div>
+                        <div class="card-title">Gestão - Secundária</div>
+                        <div class="card-meta">Dono(a) ou gestor(a) · Gerencia ~80 OS/semana</div>
+                    </div>
+                </div>
+
+                <p><strong>Maior dor:</strong> Transcrever OS de papel para o sistema (estimativa: 2-3h/dia)</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">-100%</div>
+                        <div class="stat-label">Eliminação de digitação manual</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">≈10-15h</div>
+                        <div class="stat-label">Potencial/semana a validar (2-3h/dia × 5 dias)</div>
+                    </div>
+                </div>
+
+                <div class="quote">
+                    "Finalmente posso focar em crescer a empresa, não em digitar papel."
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">👤</span>
+                    <div>
+                        <div class="card-title">Cliente - Terciária</div>
+                        <div class="card-meta">Contratante do serviço · Contrata 2x/ano</div>
+                    </div>
+                </div>
+
+                <p><strong>Maior dor:</strong> Papel ilegível com jargão técnico</p>
+                <p><strong>Wow Moment:</strong> Receber link profissional no WhatsApp com linguagem clara</p>
+
+                <div class="quote">
+                    "Finalmente entendo o que foi feito no meu ar-condicionado!"
+                </div>
+            </div>
+
+            <h3>Impacto Comparado</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Antes</th>
+                        <th>Depois</th>
+                        <th>Melhoria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tempo técnico/OS</td>
+                        <td>5-7min</td>
+                        <td>&lt;3min</td>
+                        <td>+40%</td>
+                    </tr>
+                    <tr>
+                        <td>Tempo gestão (estimado)</td>
+                        <td>~2-3h/dia</td>
+                        <td>0h</td>
+                        <td>a validar</td>
+                    </tr>
+                    <tr>
+                        <td>NPS Cliente</td>
+                        <td>6.5</td>
+                        <td>8.5+</td>
+                        <td>+31%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- FEATURES -->
+        <section id="features" class="section">
+            <h2>3. Features do MVP</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-number">1</div>
+                        <div>
+                            <div class="feature-title">Criar Ordem de Serviço</div>
+                            <div class="card-meta">Formulário simples com dados básicos</div>
+                        </div>
+                    </div>
+                    <p>Gestora registra: cliente, endereço, equipamento</p>
+                    <div class="feature-why">
+                        <strong>Por que está no MVP:</strong>
+                        Sem isso, checklist fica "solto". Dados vão pro relatório final.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-number">2</div>
+                        <div>
+                            <div class="feature-title">Checklist de Revisão ⭐</div>
+                            <div class="card-meta">14 itens obrigatórios em 4 categorias</div>
+                        </div>
+                    </div>
+                    <p><strong>Categorias:</strong></p>
+                    <ul style="margin-left: 1.5rem; color: var(--text-secondary);">
+                        <li>🧹 Limpeza e Higiene (4 itens)</li>
+                        <li>⚡ Funcionamento Elétrico (3 itens)</li>
+                        <li>📊 Desempenho (4 itens)</li>
+                        <li>🏗️ Estrutura (3 itens)</li>
+                    </ul>
+                    <div class="feature-why">
+                        <strong>Por que está no MVP:</strong>
+                        É o CORAÇÃO do produto. Se isso não funcionar, tudo falha.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-number">3</div>
+                        <div>
+                            <div class="feature-title">Observações por Item</div>
+                            <div class="card-meta">200 caracteres, obrigatório se "Ajuste"</div>
+                        </div>
+                    </div>
+                    <p>Técnico detalha problemas. Cliente entende o que foi feito.</p>
+                    <div class="feature-why">
+                        <strong>Por que está no MVP:</strong>
+                        Diferencial vs papel (espaço limitado). Se marca "Ajuste", precisa explicar.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-number">4</div>
+                        <div>
+                            <div class="feature-title">Status Final</div>
+                            <div class="card-meta">3 opções com sugestão automática</div>
+                        </div>
+                    </div>
+                    <p>✅ Aprovado · ⚠️ Atenção · 🔧 Manutenção Urgente</p>
+                    <p><strong>Sugestão:</strong> Sistema sugere baseado no checklist (mas técnico pode mudar)</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-number">5</div>
+                        <div>
+                            <div class="feature-title">Relatório Profissional</div>
+                            <div class="card-meta">Link público sem login</div>
+                        </div>
+                    </div>
+                    <p><strong>Diferencial:</strong> Tradução de termos técnicos</p>
+                    <table class="comparison-table" style="margin-top: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>Técnico</th>
+                                <th>Cliente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Serpentina interna</td>
+                                <td>Parte interna</td>
+                            </tr>
+                            <tr>
+                                <td>Dreno de condensação</td>
+                                <td>Saída de água</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="feature-why">
+                        <strong>Por que está no MVP:</strong>
+                        "Wow moment" pro cliente. Profissionaliza entrega vs papel.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BACKLOG -->
+        <section id="backlog" class="section">
+            <h2>5. Backlog Priorizado</h2>
+
+            <div class="card" style="background: var(--highlight);">
+                <h3>Critérios de Priorização</h3>
+                <p><strong>Matriz:</strong> Impacto vs Esforço</p>
+                <ul style="margin-left: 1.5rem;">
+                    <li><strong>Alta:</strong> Alto impacto + Baixo esforço → implementar primeiro</li>
+                    <li><strong>Média:</strong> Alto impacto + Alto esforço → v2</li>
+                    <li><strong>Baixa:</strong> Baixo impacto ou muito esforço → v3+</li>
+                </ul>
+            </div>
+
+            <h3>📝 Roadmap — Todas as Melhorias</h3>
+
+            <div class="backlog-item priority-high">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#5: UX Writing Neutro</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Alta prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FEF9EC; border-left: 3px solid var(--warning); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> Os itens do checklist eram escritos como afirmações positivas — "Fiação em bom estado" — gerando contradição ao marcar "Ajuste". O cliente lia o relatório e não entendia: está bom ou não? A reescrita para formato neutro ("Estado da fiação elétrica") elimina a confusão com mudança mínima no código.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐⭐⭐ · <strong>Esforço:</strong> 30min</p>
+            </div>
+
+            <div class="backlog-item priority-high">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#1: Status "Aguardando"</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Alta prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FEF9EC; border-left: 3px solid var(--warning); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> Nem sempre o atendimento termina em uma visita. Falta de peça, necessidade de aprovação do cliente, aguardar entrega de equipamento — e ainda assim o sistema exige que o técnico escolha um status final (Aprovado/Atenção/Urgente). Isso força ele a inventar uma conclusão falsa ou criar anotações paralelas fora do sistema, corrompendo a integridade dos dados.</p>
+                <p><strong>Solução:</strong> 4º status: "Aguardando Peça/Retorno". OS não finaliza, fica pausada até o técnico retornar.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐⭐ · <strong>Esforço:</strong> 2-3h</p>
+            </div>
+
+            <div class="backlog-item priority-high">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#7: Navegação Livre</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Alta prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FEF9EC; border-left: 3px solid var(--warning); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> O fluxo linear forçava o técnico a preencher categorias em ordem fixa — Limpeza → Elétrico → Desempenho → Estrutura. Na prática, ao chegar no local ele identifica o problema mais grave primeiro. Antes, era obrigado a "fingir" seguir a ordem do sistema, criando um fluxo artificial que não respeitava a realidade do trabalho de campo.</p>
+                <p><strong>Solução:</strong> Abas clicáveis no topo. Técnico navega livremente entre categorias, com validação completa só no momento de finalizar.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐⭐ · <strong>Esforço:</strong> 2h</p>
+            </div>
+
+            <div class="backlog-item priority-high">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#10: Identificador de OS no Topo do Checklist</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Alta prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FEF9EC; border-left: 3px solid var(--warning); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;"><strong>Dor resolvida:</strong> O técnico atende 5-7 clientes por dia e pode ter múltiplas OS abertas no dispositivo. Sem uma referência visual clara do nome do serviço e ID da OS durante o preenchimento do checklist, há risco real de registrar informações na OS errada — especialmente após pausas ou interrupções entre atendimentos.</p>
+                <p><strong>Solução:</strong> Exibir nome do cliente/serviço e ID da OS de forma fixa no topo do checklist, sempre visível durante o preenchimento. Elemento discreto mas persistente — não compete com o conteúdo do checklist.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐⭐ · <strong>Esforço:</strong> 30min</p>
+            </div>
+
+            <div class="backlog-item priority-medium">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#4: Fotos no Checklist</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Média prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FFF7ED; border-left: 3px solid #F59E0B; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> O técnico preenche o checklist, mas não tem como provar o que fez. Clientes questionam: "Como sei que você limpou o filtro?" Sem evidência visual, o relatório fica baseado apenas na palavra do técnico. Isso gera contestações, prejudica a credibilidade do serviço e impede a gestora de auditar a qualidade do trabalho remotamente.</p>
+                <p><strong>Solução:</strong> Câmera em cada item do checklist. Máximo 3 fotos por item: Antes / Depois / Detalhe. Aparecem agrupadas no relatório final.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐⭐ · <strong>Esforço:</strong> 2-3h</p>
+            </div>
+
+            <div class="backlog-item priority-medium">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#8: Indicador de Obrigatórios</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Média prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FFF7ED; border-left: 3px solid #F59E0B; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> Com todos os 14 itens visualmente iguais, o técnico não sabia quais eram obrigatórios e quais podia pular. Isso gerava ansiedade — ele tentava preencher tudo para não errar — ou o oposto: deixava itens críticos em branco por achar que eram opcionais. O indicador visual elimina essa ambiguidade e dá confiança para agir com autonomia.</p>
+                <p><strong>Solução:</strong> Badge ou asterisco nos itens obrigatórios. Contador no header considera apenas os 14 essenciais, não os 2 opcionais.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐ · <strong>Esforço:</strong> 1h</p>
+            </div>
+
+            <div class="backlog-item priority-medium">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#2: Observação Inicial</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Média prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FFF7ED; border-left: 3px solid #F59E0B; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> Quando a gestora cria a OS, o cliente já relatou o problema por telefone ou WhatsApp. Essa informação se perdia por completo — o técnico chegava "no escuro", sem saber o que foi reclamado. Com o campo de observação inicial, a queixa do cliente viaja junto com a OS e aparece tanto antes do atendimento quanto no relatório final, mostrando o antes e depois.</p>
+                <p><strong>Solução:</strong> Campo de texto opcional na criação da OS (máx. 300 chars). Aparece para o técnico antes de iniciar e no relatório final ao lado das observações técnicas.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐ · <strong>Esforço:</strong> 30min</p>
+            </div>
+
+            <div class="backlog-item priority-medium">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#6: Melhorias Lista OS</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Média prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FFF7ED; border-left: 3px solid #F59E0B; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> A lista de OS dificulta a triagem da gestora: a data aparece pequena e sem destaque, não há alerta visual quando uma OS está atrasada e não existe forma rápida de filtrar por urgência. Com 80+ OS por semana, ela perde tempo varrendo a lista manualmente para identificar prioridades e cobranças que deveriam saltar aos olhos.</p>
+                <p><strong>Solução:</strong> Data com destaque no topo do card. Badge "Atrasada" em vermelho com contador de dias. Filtros rápidos: Todas / Atrasadas / Hoje / Futuras / Concluídas.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐ · <strong>Esforço:</strong> 2-3h</p>
+            </div>
+
+            <div class="backlog-item priority-medium">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#11: Lista Pré-definida de Marcas</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Média prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FFF7ED; border-left: 3px solid #F59E0B; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;"><strong>Dor resolvida:</strong> O campo de marca livre permite variações e erros de digitação (ex: "Samsung", "samsumg", "SAMSUNG") que poluem o histórico de equipamentos e inviabilizam análises confiáveis por fabricante. Com escala, esses dados se tornam inutilizáveis para filtros, relatórios e inteligência de negócio.</p>
+                <p><strong>Solução:</strong> Substituir campo de texto livre por lista pré-definida com as principais marcas do mercado (LG, Samsung, Springer, Daikin, Midea, Electrolux, Carrier, Gree, Philco, Consul) + opção "Outros" com campo de texto aberto para casos não cobertos.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐ · <strong>Esforço:</strong> 1h</p>
+            </div>
+
+            <div class="backlog-item priority-medium">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#12: Padronização Visual — Ícones no lugar de Emojis</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v2">v2 · Média prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #FFF7ED; border-left: 3px solid #F59E0B; padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;"><strong>Dor resolvida:</strong> O uso de emojis na interface cria inconsistência de renderização entre sistemas operacionais e dispositivos, e transmite um tom informal incompatível com uma plataforma de gestão de serviços profissionais. Afeta a percepção de credibilidade do produto junto a gestores e clientes.</p>
+                <p><strong>Solução:</strong> Mapear todos os emojis usados na interface e substituir por ícones vetoriais de uma biblioteca consolidada (Lucide, Heroicons ou Phosphor Icons). Definir um conjunto padrão de ícones como parte do design system do produto — garantindo consistência visual e tom sério em todos os contextos.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐ · <strong>Esforço:</strong> 2-3h</p>
+            </div>
+
+            <div class="backlog-item priority-low">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#3: Editar Equipamento + IA</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v3">v3 · Baixa prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #F9FAFB; border-left: 3px solid var(--text-tertiary); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> O cliente raramente sabe as especificações técnicas do seu equipamento. A secretária agenda o serviço com "Split Samsung", mas o técnico chega e encontra um Cassete LG. Não há como corrigir durante o atendimento — o relatório final sai com dados errados, prejudicando o histórico do equipamento e a credibilidade do serviço. A IA vai além: uma foto da etiqueta identifica marca, modelo e BTUs automaticamente.</p>
+                <p><strong>Solução:</strong> Ícone ✏️ no header do checklist abre modal de edição. Botão "Identificar com IA": foto da etiqueta → GPT-4 Vision preenche campos automaticamente.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐ · <strong>Esforço:</strong> 1h (edição manual) / 4h (com IA)</p>
+            </div>
+
+            <div class="backlog-item priority-low">
+                <div class="backlog-header">
+                    <h4 style="margin: 0;">#9: Finalizar Parcialmente → Nova OS</h4>
+                    <div class="backlog-tags">
+                        <span class="tag v3">v3 · Baixa prioridade</span>
+                    </div>
+                </div>
+                <p style="background: #F9FAFB; border-left: 3px solid var(--text-tertiary); padding: 0.75rem 1rem; border-radius: 6px; margin-bottom: 0.75rem; font-size: 0.9rem;">🎯 <strong>Dor resolvida:</strong> Quando o técnico encontra um problema que impede verificar outros itens — estrutura condenada, equipamento sem energia, falta de peça — ele é forçado a marcar "N/A" ou inventar uma resposta para avançar. Isso gera dados falsos e quebra a integridade do checklist. A feature permite finalizar o atendimento parcialmente e criar automaticamente uma nova OS de retorno com apenas os itens pendentes, mantendo rastreabilidade completa.</p>
+                <p><strong>Solução:</strong> Ao tentar finalizar com itens pendentes, sistema oferece "Finalizar Parcialmente". Técnico registra o motivo e uma nova OS de retorno é criada automaticamente com só os itens faltantes.</p>
+                <p><strong>Impacto:</strong> ⭐⭐⭐ · <strong>Esforço:</strong> 3-4h · <em>Nota: coberto parcialmente pelo #1 (Status Aguardando)</em></p>
+            </div>
+        </section>
+
+        <!-- MÉTRICAS -->
+        <section id="metricas" class="section">
+            <h2>6. Métricas de Validação</h2>
+
+            <p>Validar em <strong>4 semanas</strong> com cliente piloto:</p>
+
+            <div class="feature-grid">
+                <div class="card">
+                    <h3>H1: Adoção</h3>
+                    <p><strong>Hipótese:</strong> Técnicos adotarão e não voltarão pro papel</p>
+                    <p><strong>Métrica:</strong> 80%+ das OS digitais</p>
+                    <p><strong>Como medir:</strong> (OS digitais / Total) × 100</p>
+                </div>
+
+                <div class="card">
+                    <h3>H2: Eficiência</h3>
+                    <p><strong>Hipótese:</strong> Digital é mais rápido que papel</p>
+                    <p><strong>Métrica:</strong> &lt;3 min (vs 5-7 min papel)</p>
+                    <p><strong>Como medir:</strong> Timestamp (iniciar → finalizar)</p>
+                </div>
+
+                <div class="card">
+                    <h3>H3: Qualidade</h3>
+                    <p><strong>Hipótese:</strong> Checklists mais completos</p>
+                    <p><strong>Métrica:</strong> 90%+ totalmente preenchidos</p>
+                    <p><strong>Como medir:</strong> % sem itens em branco</p>
+                </div>
+
+                <div class="card">
+                    <h3>H4: Satisfação Cliente</h3>
+                    <p><strong>Hipótese:</strong> Preferem relatório digital</p>
+                    <p><strong>Métrica:</strong> 70%+ acessam link</p>
+                    <p><strong>Como medir:</strong> Analytics do link público</p>
+                </div>
+
+                <div class="card">
+                    <h3>H5: ROI Gestão</h3>
+                    <p><strong>Hipótese:</strong> Elimina retrabalho de transcrição (~10h+/semana)</p>
+                    <p><strong>Métrica:</strong> Tempo de digitação manual antes vs. depois</p>
+                    <p><strong>Como medir:</strong> Survey + tracking (a validar no piloto)</p>
+                </div>
+            </div>
+
+            <h3>Critérios de Sucesso</h3>
+
+            <div class="journey-step">
+                <div class="journey-after">
+                    <div class="journey-label">✅ MVP VALIDADO (Escalar)</div>
+                    <ul style="margin: 0; padding-left: 1.5rem;">
+                        <li>4/5 hipóteses confirmadas</li>
+                        <li>NPS gestão ≥ 8</li>
+                        <li>Técnicos pedem pra continuar</li>
+                        <li>Cliente piloto quer contratar</li>
+                    </ul>
+                </div>
+                <div class="journey-before">
+                    <div class="journey-label">❌ PIVOTAR</div>
+                    <ul style="margin: 0; padding-left: 1.5rem;">
+                        <li>&lt;2/5 hipóteses confirmadas</li>
+                        <li>Técnicos voltaram pro papel</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="cta">
+            <h3>Próximos Passos</h3>
+            <p style="color: rgba(255,255,255,0.9); max-width: 600px; margin: 0 auto;">
+                O MVP está pronto para validação. Acesse o protótipo funcional e o documento completo.
+            </p>
+            <div class="cta-buttons">
+                <a href="https://case-vobi-coolair-checklist.vercel.app/" target="_blank" class="btn btn-primary">Ver Protótipo</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active to clicked tab
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
